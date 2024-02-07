@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Page } from './card/Page.jsx';
+import { Dirb } from './card/Dirb.jsx';
 
 function App() {
-	return <Page />;
+	return <Dirb />;
 }
 
 export default App;

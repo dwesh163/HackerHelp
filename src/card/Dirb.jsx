@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 import { ArrowRepeat, ChevronDown, ChevronRight, Folder2, Globe2 } from 'react-bootstrap-icons';
 import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
 
-import './../assets/page.css';
+import './../assets/dirb.css';
 
-export function Page() {
+export function Dirb() {
 	const [data, setData] = useState(null);
 	const [isPageLoading, setIsPageLoading] = useState(true);
 
@@ -39,58 +39,58 @@ export function Page() {
 				setIsPageLoading(false);
 			})
 			.catch((error) => {
-				console.error('Error fetching data: ', error.message);
+				console.error('Error fetching data: ', error);
 			});
 	};
 
-	const displayPage = (page) => (
-		<div key={page.url}>
-			{page.subpages && page.subpages.length > 0 ? (
+	const displayPage = (dirb) => (
+		<div key={dirb.url}>
+			{dirb.subpages && dirb.subpages.length > 0 ? (
 				<>
-					<span className="toggle element" onClick={() => toggleSubpages(page.url)}>
-						{page.isSubpagesOpen ? <ChevronDown className="icon" /> : <ChevronRight className="icon" />}
+					<span className="toggle element" onClick={() => toggleSubpages(dirb.url)}>
+						{dirb.isSubpagesOpen ? <ChevronDown className="icon" /> : <ChevronRight className="icon" />}
 						<Folder2 className="icon" />
-						{page.url}
+						{dirb.url}
 					</span>
-					<div className="subpages" style={{ display: page.isSubpagesOpen ? 'block' : 'none' }}>
-						{page.subpages.map((subpage) => displayPage(subpage))}
+					<div className="subpages" style={{ display: dirb.isSubpagesOpen ? 'block' : 'none' }}>
+						{dirb.subpages.map((subpage) => displayPage(subpage))}
 					</div>
 				</>
 			) : (
 				<span className="element">
 					<Globe2 className="icon" />
-					{page.url}
+					{dirb.url}
 				</span>
 			)}
 		</div>
 	);
 
 	const toggleSubpages = (url) => {
-		const toggleSubpagesRecursive = (pages) => {
-			return pages.map((page) => {
-				if (page.url === url) {
-					return { ...page, isSubpagesOpen: !page.isSubpagesOpen };
-				} else if (page.subpages && page.subpages.length > 0) {
-					const updatedSubpages = toggleSubpagesRecursive(page.subpages);
-					return { ...page, subpages: updatedSubpages };
+		const toggleSubpagesRecursive = (dirbs) => {
+			return dirbs.map((dirb) => {
+				if (dirb.url === url) {
+					return { ...dirb, isSubpagesOpen: !dirb.isSubpagesOpen };
+				} else if (dirb.subpages && dirb.subpages.length > 0) {
+					const updatedSubpages = toggleSubpagesRecursive(dirb.subpages);
+					return { ...dirb, subpages: updatedSubpages };
 				} else {
-					return page;
+					return dirb;
 				}
 			});
 		};
 
 		setData((prevData) => {
-			if (!prevData || !prevData.pages) {
+			if (!prevData || !prevData.dirbs) {
 				return prevData;
 			}
 
-			const updatedPages = toggleSubpagesRecursive(prevData.pages);
-			return { ...prevData, pages: updatedPages };
+			const updatedPages = toggleSubpagesRecursive(prevData.dirbs);
+			return { ...prevData, dirbs: updatedPages };
 		});
 	};
 
 	return (
-		<article id="page">
+		<article id="dirb">
 			<div className="title">
 				<h3>Dirb</h3>
 				<span id="time">
