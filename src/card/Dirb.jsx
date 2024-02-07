@@ -7,14 +7,16 @@ import './../assets/dirb.css';
 
 export function Dirb() {
 	const [data, setData] = useState(null);
-	const [isPageLoading, setIsPageLoading] = useState(true);
+	const [dirbStatus, setDirbStatus] = useState('loading');
+
+	const [dribTryTime, setDribTryTime] = useState('2min 30s');
 
 	useEffect(() => {
 		fetchData();
 	}, []);
 
 	const fetchData = () => {
-		setIsPageLoading(true);
+		setDirbStatus('loading');
 		fetch('http://192.168.0.79:1000/json')
 			.then((response) => {
 				if (!response.ok) {
@@ -36,9 +38,10 @@ export function Dirb() {
 
 				const dataWithOpenSubpages = openAllSubpagesRecursive(data.pages);
 				setData({ ...data, pages: dataWithOpenSubpages });
-				setIsPageLoading(false);
+				setDirbStatus('show');
 			})
 			.catch((error) => {
+				setDirbStatus('error');
 				console.error('Error fetching data: ', error);
 			});
 	};
@@ -67,25 +70,25 @@ export function Dirb() {
 
 	const toggleSubpages = (url) => {
 		const toggleSubpagesRecursive = (dirbs) => {
-			return dirbs.map((dirb) => {
-				if (dirb.url === url) {
-					return { ...dirb, isSubpagesOpen: !dirb.isSubpagesOpen };
-				} else if (dirb.subpages && dirb.subpages.length > 0) {
-					const updatedSubpages = toggleSubpagesRecursive(dirb.subpages);
-					return { ...dirb, subpages: updatedSubpages };
+			return dirbs.map((page) => {
+				if (page.url === url) {
+					return { ...page, isSubpagesOpen: !page.isSubpagesOpen };
+				} else if (page.subpages && page.subpages.length > 0) {
+					const updatedSubpages = toggleSubpagesRecursive(page.subpages);
+					return { ...page, subpages: updatedSubpages };
 				} else {
-					return dirb;
+					return page;
 				}
 			});
 		};
 
 		setData((prevData) => {
-			if (!prevData || !prevData.dirbs) {
+			if (!prevData || !prevData.pages) {
 				return prevData;
 			}
 
-			const updatedPages = toggleSubpagesRecursive(prevData.dirbs);
-			return { ...prevData, dirbs: updatedPages };
+			const updatedPages = toggleSubpagesRecursive(prevData.pages);
+			return { ...prevData, pages: updatedPages };
 		});
 	};
 
@@ -98,9 +101,9 @@ export function Dirb() {
 					<ArrowRepeat className="refresh" />
 				</span>
 			</div>
-			{!isPageLoading ? (
+			{dirbStatus !== 'loading' && dirbStatus !== 'error' ? (
 				<div>{data.pages.map((page) => displayPage(page))}</div>
-			) : (
+			) : dirbStatus === 'loading' ? (
 				<div className="pageLoading">
 					<CircularProgress
 						variant="indeterminate"
@@ -115,6 +118,12 @@ export function Dirb() {
 						size={40}
 						thickness={4}
 					/>
+				</div>
+			) : (
+				<div className="error">
+					<p>
+						An error occurred. Retry in <span>{dribTryTime}</span>
+					</p>
 				</div>
 			)}
 		</article>
