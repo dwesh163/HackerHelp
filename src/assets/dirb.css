@@ -5,15 +5,14 @@
 }
 
 #dirb div {
-    padding-left: 8px;
-    padding: 3px 10px 3px 10px;
+    padding: 3px 10px 3px 15px;
 
 }
 
 #dirb {
     color: white;
     background-color: rgb(39, 39, 39);
-    width: 350px;
+    width: 400px;
     padding: 14px 14px 14px 0px;
     border-radius: 6px;
     position: relative;
@@ -26,6 +25,8 @@
     width: fit-content;
     margin-bottom: 4px;
 }
+
+#dirb .subpages {}
 
 #dirb .element {
     align-content: baseline;
@@ -73,4 +74,22 @@
     justify-content: center;
     height: 250px;
     margin: auto;
+}
+
+#dirb .error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 250px;
+    margin: auto;
+}
+
+#dirb .error p {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+#dirb .error span {
+    font-weight: 700;
 }
