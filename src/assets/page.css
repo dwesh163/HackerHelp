@@ -13,10 +13,11 @@
 #page {
     color: white;
     background-color: rgb(39, 39, 39);
-    width: 300px;
+    width: 350px;
     padding: 14px 14px 14px 0px;
     border-radius: 6px;
     position: relative;
+    min-height: 300px;
 }
 
 #page .icon {
@@ -36,8 +37,40 @@
     width: 100%;
 }
 
-.bi-caret {
-    align-self: center;
+#page h3 {
+    margin: 0px;
+}
 
+#page .title {
+    text-align: center;
+    justify-content: space-between;
+    vertical-align: middle;
+    text-align: center;
     display: flex;
+    align-items: center;
+    padding: 0px 2px 8px 16px;
+
+}
+
+#page #time {
+    text-align: center;
+    justify-content: space-between;
+    vertical-align: middle;
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+#page #time .refresh {
+    margin: 4px;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+#page .pageLoading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 250px;
+    margin: auto;
 }

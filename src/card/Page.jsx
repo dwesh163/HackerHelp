@@ -1,17 +1,21 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { ChevronDown, ChevronRight, Folder2, Globe2 } from 'react-bootstrap-icons';
+import { ArrowRepeat, ChevronDown, ChevronRight, Folder2, Globe2 } from 'react-bootstrap-icons';
+import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
+
 import './../assets/page.css';
 
 export function Page() {
 	const [data, setData] = useState(null);
+	const [isPageLoading, setIsPageLoading] = useState(true);
 
 	useEffect(() => {
 		fetchData();
 	}, []);
 
 	const fetchData = () => {
-		fetch('http://172.20.10.3:1000/json')
+		setIsPageLoading(true);
+		fetch('http://192.168.0.79:1000/json')
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error('Network response was not ok');
@@ -32,6 +36,7 @@ export function Page() {
 
 				const dataWithOpenSubpages = openAllSubpagesRecursive(data.pages);
 				setData({ ...data, pages: dataWithOpenSubpages });
+				setIsPageLoading(false);
 			})
 			.catch((error) => {
 				console.error('Error fetching data: ', error.message);
@@ -84,5 +89,34 @@ export function Page() {
 		});
 	};
 
-	return data ? <article id="page">{data.pages.map((page) => displayPage(page))}</article> : <p>Loading...</p>;
+	return (
+		<article id="page">
+			<div className="title">
+				<h3>Dirb</h3>
+				<span id="time">
+					12min
+					<ArrowRepeat className="refresh" />
+				</span>
+			</div>
+			{!isPageLoading ? (
+				<div>{data.pages.map((page) => displayPage(page))}</div>
+			) : (
+				<div className="pageLoading">
+					<CircularProgress
+						variant="indeterminate"
+						disableShrink
+						sx={{
+							color: (theme) => (theme.palette.mode === 'light' ? '#1a90ff' : '#308fe8'),
+							animationDuration: '550ms',
+							[`& .${circularProgressClasses.circle}`]: {
+								strokeLinecap: 'round',
+							},
+						}}
+						size={40}
+						thickness={4}
+					/>
+				</div>
+			)}
+		</article>
+	);
 }
