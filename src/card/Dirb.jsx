@@ -2,12 +2,14 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { ArrowRepeat, ChevronDown, ChevronRight, Folder2, Globe2 } from 'react-bootstrap-icons';
 import CircularProgress, { circularProgressClasses } from '@mui/material/CircularProgress';
+import TimeRounder from '../component/TimeRounder.jsx';
 
 import './../assets/dirb.css';
 
 export function Dirb() {
 	const [data, setData] = useState(null);
 	const [dirbStatus, setDirbStatus] = useState('loading');
+	const [lastRefreshTime, setLastRefreshTime] = useState(0);
 
 	const [dribTryTime, setDribTryTime] = useState('2min 30s');
 
@@ -17,7 +19,7 @@ export function Dirb() {
 
 	const fetchData = () => {
 		setDirbStatus('loading');
-		fetch('http://192.168.0.79:1000/json')
+		fetch('http://172.20.10.3:1000/json')
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error('Network response was not ok');
@@ -38,6 +40,7 @@ export function Dirb() {
 
 				const dataWithOpenSubpages = openAllSubpagesRecursive(data.pages);
 				setData({ ...data, pages: dataWithOpenSubpages });
+				setLastRefreshTime(data.last);
 				setDirbStatus('show');
 			})
 			.catch((error) => {
@@ -97,8 +100,8 @@ export function Dirb() {
 			<div className="title">
 				<h3>Dirb</h3>
 				<span id="time">
-					12min
-					<ArrowRepeat className="refresh" />
+					<TimeRounder initialTimestamp={lastRefreshTime} />
+					<ArrowRepeat className="refresh" onClick={fetchData} />
 				</span>
 			</div>
 			{dirbStatus !== 'loading' && dirbStatus !== 'error' ? (
